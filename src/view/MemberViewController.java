@@ -2,6 +2,8 @@ package view;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
@@ -22,23 +24,34 @@ import javafx.scene.control.Alert.AlertType;
 import model.Member;
 
 public class MemberViewController implements Initializable {
+	
+	Calendar oCalendar = Calendar.getInstance( );
+
 	@FXML	private Button btnCreate;
 	@FXML	private Button btnUpdate;
 	@FXML	private Button btnDelete;
 	
-	@FXML	private Button btnExecute;
+	@FXML	private Button btnAddress;
+	@FXML	private Button btnName;
+
 	@FXML	private TextArea taExecute;
 	@FXML	private TextField tfExecute;
 	
-	@FXML	private TextField tfID;
+	@FXML	private TextField tfEmail;
 	@FXML	private PasswordField tfPW;
 	@FXML	private TextField tfName;
 	@FXML	private TextField tfContact;
+	@FXML	private TextField tfBirth;
+	@FXML	private TextField tfAddress;
+
 	
 	@FXML 	private TableView<Member> tableViewMember;
 	@FXML	private TableColumn<Member, String> columnName;
-	@FXML	private TableColumn<Member, String> columnID;
+	@FXML	private TableColumn<Member, String> columnEmail;
 	@FXML	private TableColumn<Member, String> columnPW;
+	@FXML	private TableColumn<Member, String> columnBirth;
+	@FXML	private TableColumn<Member, String> columnAge;
+	@FXML	private TableColumn<Member, String> columnAddress;
 	@FXML	private TableColumn<Member, String> columnContact;
 	
 	// Member : model이라고도 하고 DTO, VO 라고도 함
@@ -57,17 +70,23 @@ public class MemberViewController implements Initializable {
 		
 		memberService = new MemberServiceImpl();
 		// 람다식 : java 8  함수형 언어 지원 
-		columnID.setCellValueFactory(cvf -> cvf.getValue().uidProperty());
+		columnEmail.setCellValueFactory(cvf -> cvf.getValue().uemailProperty());
 		columnPW.setCellValueFactory(cvf -> cvf.getValue().upwProperty());
 		columnName.setCellValueFactory(cvf -> cvf.getValue().unameProperty());	
-		columnContact.setCellValueFactory(cvf -> cvf.getValue().contactProperty());
+		columnBirth.setCellValueFactory(cvf -> cvf.getValue().ubirthProperty());	
+		columnAge.setCellValueFactory(cvf -> cvf.getValue().uageProperty());	
+		columnAddress.setCellValueFactory(cvf -> cvf.getValue().uaddressProperty());	
+		columnContact.setCellValueFactory(cvf -> cvf.getValue().ucontactProperty());
 		
 		tableViewMember.getSelectionModel().selectedItemProperty().addListener(
 				(observable, oldValue, newValue) -> showMemberInfo(newValue));
 
 		//btnCreate.setOnMouseClicked(event -> handleCreate());		
 		// btnDelete.setOnMouseClicked(e -> handleDelete());		
-		btnExecute.setOnMouseClicked(event -> handleExecute());	
+		//btnExecute.setOnMouseClicked(event -> handleExecute());	
+		btnAddress.setOnMouseClicked(event -> handleAddress());		
+
+		
 		
 		loadMemberTableView();
 	}
@@ -86,15 +105,23 @@ public class MemberViewController implements Initializable {
 	
 	private void showMemberInfo(Member member) {
 		if (member != null) {
-			tfID.setText(member.getUid());
+			tfEmail.setText(member.getUemail());
 			tfPW.setText(member.getUpw());
 			tfName.setText(member.getUname());
+			tfBirth.setText(member.getUbirth());
+			tfAddress.setText(member.getUaddress());
+			tfContact.setText(member.getUcontact());
+
 //			tfMobilePhone.setText(member.getMobilePhone());
 		}
 		 else {
-			 tfID.setText("");
+			 tfEmail.setText("");
 			 tfPW.setText("");
 		     tfName.setText("");
+		     tfBirth.setText("");
+		     tfAddress.setText("");
+		     tfContact.setText("");
+
 //		     tfMobilePhone.setText("010");
 		 }
 	}
@@ -109,10 +136,59 @@ public class MemberViewController implements Initializable {
 	
 	
 	@FXML 
+	private void handleAddress() {
+		String condition = tfExecute.getText();
+		taExecute.setText("");
+		if(condition.length() > 0) {
+			List<Member> searched = memberService.Address(condition);
+			if(searched.size() > 0) {
+				int no = 1;
+				for(Member m : searched) {
+					taExecute.appendText(no++ + " ) " + m.getUaddress() + " : " + m.getUemail() + " : " + m.getUname() + " \n");
+				}
+			}
+			else
+				taExecute.setText("검색 조건에 맞는 정보가 없습니다.");
+		}
+		else
+			this.showAlert("검색 조건을 입력하십시요");			
+	}
+	
+	@FXML 
+	private void handleName() {
+		String condition = tfExecute.getText();
+		taExecute.setText("");
+		if(condition.length() > 0) {
+			List<Member> searched = memberService.Name(condition);
+			if(searched.size() > 0) {
+				int no = 1;
+				for(Member m : searched) {
+					taExecute.appendText(no++ + " ) " + m.getUaddress() + " : " + m.getUemail() + " : " + m.getUname() + " \n");
+				}
+			}
+			else
+				taExecute.setText("검색 조건에 맞는 정보가 없습니다.");
+		}
+		else
+			this.showAlert("검색 조건을 입력하십시요");			
+	}
+	
+	
+	@FXML 
 	private void handleCreate() { // event source, listener, handler
-		if(tfID.getText().length() > 0) {
+		if(tfEmail.getText().length() > 0) {
+			
+		
+			String a = tfBirth.getText();
+			int birth = Integer.parseInt(a.substring(0,4));
+
+			int today = oCalendar.get(Calendar.YEAR);
+			int age = today - birth + 1;
+			String age2 = age + "";
+			
+			
 			Member newMember = 
-					new Member(tfID.getText(), tfPW.getText(), tfName.getText(), tfContact.getText());
+					new Member(tfEmail.getText(), tfPW.getText(), tfName.getText(), tfBirth.getText(), age2, tfAddress.getText(), tfContact.getText());
 			if( memberService.findByUid(newMember) < 0) {
 				data.add(newMember);			
 				tableViewMember.setItems(data);
@@ -127,7 +203,14 @@ public class MemberViewController implements Initializable {
 	}
 	@FXML 
 	private void handleUpdate() {
-		Member newMember = new Member(tfID.getText(), tfPW.getText(), tfName.getText(), tfContact.getText());
+		
+		String a = tfBirth.getText();
+		int birth = Integer.parseInt(a.substring(0,4));
+
+		int today = oCalendar.get(Calendar.YEAR);
+		int age = today - birth + 1;
+		String age2 = age + "";
+		Member newMember = new Member(tfEmail.getText(), tfPW.getText(), tfName.getText(), tfBirth.getText(), age2, tfAddress.getText(), tfContact.getText());
 
 		int selectedIndex = tableViewMember.getSelectionModel().getSelectedIndex();
 		// uid를 변경하고 수정 -> 생성으로 처리하게 된다.

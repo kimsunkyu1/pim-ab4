@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import model.Member;
 import model.MemberDAO;
@@ -16,7 +17,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	// this : 현재 객체 지정, this(매개변수) : 현재 객체의 생성자
 	public MemberServiceImpl() {
-		this(new File("member.txt"));		
+		this(new File("201612035.txt"));		
 	}
 	
 	public MemberServiceImpl(File file) {
@@ -60,6 +61,17 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int findByUid(Member member) {
 		return memberDAO.searchByID(member);
+	}
+	
+	
+	@Override
+	public List<Member> Address(String address) {
+		return memberDAO.searchByAddress(address);
+	}
+	
+	@Override
+	public List<Member> Name(String name) {
+		return memberDAO.searchByName(name);
 	}
 
 }

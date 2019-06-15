@@ -7,33 +7,39 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Member { // DB의 레코드와 매핑되는 객체
-	private StringProperty uid; // DB의 필드와 매핑
+	private StringProperty uemail; // DB의 필드와 매핑
 	private StringProperty upw;
 	private StringProperty uname;
-	private StringProperty contact;
+	private StringProperty uaddress;
+	private StringProperty uage;
+	private StringProperty ubirth;
+	private StringProperty ucontact;
 	/*
     private final IntegerProperty zipcode;
     private ObjectProperty<LocalDate> birthday;
 	*/
 	public Member() {
-		this(null, null, null, null);
+		this(null, null, null, null, null, null, null);
 	}
 	
-	public Member(String id, String pw, String name, String contact) {
-		this.uid = new SimpleStringProperty(id);
-		this.uname = new SimpleStringProperty(name);
+	public Member(String email, String pw, String name, String birth, String age, String address, String contact) {
+		this.uemail = new SimpleStringProperty(email);
 		this.upw = new SimpleStringProperty(pw);
-		this.contact = new SimpleStringProperty(contact);
+		this.uname = new SimpleStringProperty(name);
+		this.ubirth = new SimpleStringProperty(birth);
+		this.uage = new SimpleStringProperty(age);
+		this.uaddress = new SimpleStringProperty(address);
+		this.ucontact = new SimpleStringProperty(contact);
 	}
 	
-	public String getUid() {
-		return this.uid.get();
+	public String getUemail() {
+		return this.uemail.get();
 	}
-	public void setUid(String uid) {
-		this.uid.set(uid);
+	public void setUemail(String uemail) {
+		this.uemail.set(uemail);
 	}
-    public StringProperty uidProperty() {
-        return uid;
+    public StringProperty uemailProperty() {
+        return uemail;
     }
     
     public String getUpw() {
@@ -56,14 +62,48 @@ public class Member { // DB의 레코드와 매핑되는 객체
         return uname;
     }
 
-	public String getContact() {
-		return this.contact.get();
+	public String getUcontact() {
+		return this.ucontact.get();
 	}
-	public void setContact(String contact) {
-		this.contact.set(contact);
+	public void setUcontact(String ucontact) {
+		this.ucontact.set(ucontact);
 	}
-	public StringProperty contactProperty() {
-        return contact;
+	public StringProperty ucontactProperty() {
+        return ucontact;
+    }
+	
+	
+	public String getUbirth() {
+		return this.ubirth.get();
+	}
+	public void setUbirth(String ubirth) {
+		this.ubirth.set(ubirth);
+	}
+	public StringProperty ubirthProperty() {
+        return ubirth;
     }
 
+	
+	public String getUage() {
+		return this.uage.get();
+	}
+	public void setUage(String uage) {
+		this.uage.set(uage);
+	}
+	public StringProperty uageProperty() {
+        return uage;
+    }
+	
+	public String getUaddress() {
+		return this.uaddress.get();
+	}
+	public void setUaddress(String uaddress) {
+		this.uaddress.set(uaddress);
+	}
+	public StringProperty uaddressProperty() {
+        return uaddress;
+    }
+	
+
+	
 }

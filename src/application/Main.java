@@ -16,12 +16,13 @@ public class Main extends Application {
     private Stage rootStage;
     private BorderPane rootBorderPane;
     private AnchorPane memberAnchorPane;
+    
 
     @Override
 	public void start(Stage primaryStage) {
 		try {
 			this.rootStage = primaryStage;
-	        this.rootStage.setTitle("Have a PASSION!");
+	        this.rootStage.setTitle("201612035 김선규");
 	        
 			loadMainBoderPane();
 			loadMemberAnchorPane();			
@@ -38,7 +39,7 @@ public class Main extends Application {
 			loader.setLocation(Main.class.getResource("/view/RootView.fxml")); // view controls					
 			rootBorderPane = (BorderPane) loader.load();
 			
-			Scene scene = new Scene(rootBorderPane, 800, 600);
+			Scene scene = new Scene(rootBorderPane, 900, 600);
 			scene.getStylesheets().add(Main.class.getResource("/view/member.css").toExternalForm());
 			rootStage.setScene(scene);	
 			rootStage.show();
